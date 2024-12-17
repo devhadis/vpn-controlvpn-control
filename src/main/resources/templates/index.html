@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Control Panel</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>VPN Control Panel</h1>
+
+        <!-- Dropdown para escolha de região -->
+        <label for="region">Escolha uma região:</label>
+        <select id="region">
+            <!-- América do Norte -->
+            <optgroup label="América do Norte">
+                <option value="US-East">Estados Unidos - Costa Leste (Nova York, Miami)</option>
+                <option value="US-West">Estados Unidos - Costa Oeste (São Francisco, Los Angeles)</option>
+                <option value="CA-East">Canadá - Leste (Toronto, Montreal)</option>
+                <option value="CA-West">Canadá - Oeste (Vancouver)</option>
+                <option value="MX">México</option>
+            </optgroup>
+
+            <!-- América do Sul -->
+            <optgroup label="América do Sul">
+                <option value="BR">Brasil - São Paulo</option>
+                <option value="AR">Argentina - Buenos Aires</option>
+                <option value="CL">Chile - Santiago</option>
+                <option value="CO">Colômbia</option>
+            </optgroup>
+
+            <!-- Europa -->
+            <optgroup label="Europa">
+                <option value="UK">Reino Unido - Londres</option>
+                <option value="DE">Alemanha - Frankfurt</option>
+                <option value="FR">França - Paris</option>
+                <option value="NL">Países Baixos - Amsterdã</option>
+                <option value="ES">Espanha - Madrid</option>
+                <option value="IT">Itália - Roma</option>
+                <option value="SE">Suécia - Estocolmo</option>
+                <option value="PL">Polônia</option>
+            </optgroup>
+
+            <!-- Ásia -->
+            <optgroup label="Ásia">
+                <option value="CN">China - Hong Kong</option>
+                <option value="JP">Japão - Tóquio</option>
+                <option value="KR">Coreia do Sul - Seul</option>
+                <option value="IN">Índia - Mumbai</option>
+                <option value="SG">Singapura - Singapura</option>
+                <option value="TH">Tailândia</option>
+                <option value="VN">Vietnã</option>
+            </optgroup>
+
+            <!-- Oceania -->
+            <optgroup label="Oceania">
+                <option value="AU">Austrália - Sydney</option>
+                <option value="NZ">Nova Zelândia - Auckland</option>
+            </optgroup>
+
+            <!-- África -->
+            <optgroup label="África">
+                <option value="ZA">África do Sul - Joanesburgo</option>
+                <option value="EG">Egito - Cairo</option>
+                <option value="NG">Nigéria - Lagos</option>
+                <option value="KE">Quênia</option>
+            </optgroup>
+
+            <!-- Oriente Médio -->
+            <optgroup label="Oriente Médio">
+                <option value="IL">Israel - Tel Aviv</option>
+                <option value="AE">Emirados Árabes Unidos - Dubai</option>
+                <option value="SA">Arábia Saudita</option>
+                <option value="TR">Turquia - Istambul</option>
+            </optgroup>
+        </select>
+
+        <!-- Botões de Controle -->
+        <button onclick="connectVPN()">Connect VPN</button>
+        <button onclick="stopVPN()">Stop VPN</button>
+
+        <!-- Saída de Respostas -->
+        <div class="output" id="output">Output will appear here...</div>
+    </div>
+
+    <!-- Script -->
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPN Control Panel</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <div class="container">
+        <h1>VPN Control Panel</h1>
+
+        <!-- Dropdown para escolha de região -->
+        <label for="region">Escolha uma região:</label>
+        <select id="region">
+            <!-- América do Norte -->
+            <optgroup label="América do Norte">
+                <option value="US-East">Estados Unidos - Costa Leste (Nova York, Miami)</option>
+                <option value="US-West">Estados Unidos - Costa Oeste (São Francisco, Los Angeles)</option>
+                <option value="CA-East">Canadá - Leste (Toronto, Montreal)</option>
+                <option value="CA-West">Canadá - Oeste (Vancouver)</option>
+                <option value="MX">México</option>
+            </optgroup>
+
+            <!-- América do Sul -->
+            <optgroup label="América do Sul">
+                <option value="BR">Brasil - São Paulo</option>
+                <option value="AR">Argentina - Buenos Aires</option>
+                <option value="CL">Chile - Santiago</option>
+                <option value="CO">Colômbia</option>
+            </optgroup>
+
+            <!-- Europa -->
+            <optgroup label="Europa">
+                <option value="UK">Reino Unido - Londres</option>
+                <option value="DE">Alemanha - Frankfurt</option>
+                <option value="FR">França - Paris</option>
+                <option value="NL">Países Baixos - Amsterdã</option>
+                <option value="ES">Espanha - Madrid</option>
+                <option value="IT">Itália - Roma</option>
+                <option value="SE">Suécia - Estocolmo</option>
+                <option value="PL">Polônia</option>
+            </optgroup>
+
+            <!-- Ásia -->
+            <optgroup label="Ásia">
+                <option value="CN">China - Hong Kong</option>
+                <option value="JP">Japão - Tóquio</option>
+                <option value="KR">Coreia do Sul - Seul</option>
+                <option value="IN">Índia - Mumbai</option>
+                <option value="SG">Singapura - Singapura</option>
+                <option value="TH">Tailândia</option>
+                <option value="VN">Vietnã</option>
+            </optgroup>
+
+            <!-- Oceania -->
+            <optgroup label="Oceania">
+                <option value="AU">Austrália - Sydney</option>
+                <option value="NZ">Nova Zelândia - Auckland</option>
+            </optgroup>
+
+            <!-- África -->
+            <optgroup label="África">
+                <option value="ZA">África do Sul - Joanesburgo</option>
+                <option value="EG">Egito - Cairo</option>
+                <option value="NG">Nigéria - Lagos</option>
+                <option value="KE">Quênia</option>
+            </optgroup>
+
+            <!-- Oriente Médio -->
+            <optgroup label="Oriente Médio">
+                <option value="IL">Israel - Tel Aviv</option>
+                <option value="AE">Emirados Árabes Unidos - Dubai</option>
+                <option value="SA">Arábia Saudita</option>
+                <option value="TR">Turquia - Istambul</option>
+            </optgroup>
+        </select>
+
+        <!-- Botões de Controle -->
+        <button onclick="connectVPN()">Connect VPN</button>
+        <button onclick="stopVPN()">Stop VPN</button>
+
+        <!-- Saída de Respostas -->
+        <div class="output" id="output">Output will appear here...</div>
+    </div>
+
+    <!-- Script -->
+    <script th:src="@{/js/app.js}"></script>
+</body>
+</html>
