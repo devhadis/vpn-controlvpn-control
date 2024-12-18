@@ -1,31 +1,38 @@
-# **Documentação do Projeto VPN com Spring Boot**
+# **Documentação do Projeto VPN com Spring Boot e Automação de Configuração**
+
+---
 
 ## **1. Visão Geral**
 
-O projeto **VPN Control Panel** é uma aplicação Spring Boot que permite **gerenciar servidores VPN** com facilidade. Através de uma interface web simples e endpoints de API REST, o projeto permite:
+O **VPN Control Panel** é um projeto desenvolvido com **Spring Boot** que oferece uma solução robusta para configurar, gerenciar e operar servidores VPN utilizando **OpenVPN**. Além disso, inclui um script de automação em Python que facilita a configuração inicial do servidor OpenVPN e a execução do backend.
 
-- Escolher regiões para iniciar ou parar a VPN.
-- Gerenciar configurações de VPN usando OpenVPN.
-- Facilitar a execução de comandos pré-definidos no servidor.
+**Funcionalidades principais:**
+- Interface web intuitiva para iniciar ou parar conexões VPN.
+- API REST para integração e automação.
+- Automação para configurar OpenVPN, gerar certificados e iniciar o serviço.
+- Gerenciamento seguro de comandos no servidor.
 
 ---
 
 ## **2. Tecnologias Utilizadas**
 
-- **Spring Boot**: Framework principal para criação de APIs e gerenciamento.
+- **Spring Boot**: Framework principal para APIs REST e lógica de gerenciamento.
 - **Spring Web**: Para construção de endpoints REST.
-- **Spring Security**: Para proteger rotas sensíveis com autenticação.
-- **Spring Data JPA**: Para acesso ao banco de dados (H2 ou MySQL).
-- **Thymeleaf**: Para renderização de páginas HTML.
-- **OpenVPN**: Ferramenta para criação e gerenciamento de VPN.
-- **Easy-RSA**: Gerenciamento de certificados e chaves.
-- **Java 17**: Versão do JDK.
+- **Spring Security**: Para autenticação e proteção de rotas sensíveis.
+- **Spring Data JPA**: Persistência de dados com banco de dados.
+- **Thymeleaf**: Renderização de páginas HTML.
+- **OpenVPN**: Configuração e gerenciamento do servidor VPN.
+- **Easy-RSA**: Geração de certificados de segurança.
+- **Java 17**: Linguagem de programação usada no backend.
 - **Maven**: Gerenciador de dependências.
-- **Linux**: Sistema operacional base para execução do servidor OpenVPN.
+- **Linux**: Sistema operacional base recomendado.
+- **Python 3**: Para automação da configuração inicial do servidor.
 
 ---
 
 ## **3. Estrutura do Projeto**
+
+### **Estrutura do Backend Spring Boot**
 
 ```plaintext
 vpn-control/
@@ -39,17 +46,17 @@ vpn-control/
 │   │   │   │   ├── RegionController.java        # Gerencia rotas das regiões
 │   │   │   │   └── VpnController.java           # Gerencia as VPNs
 │   │   │   ├── model/
-│   │   │   │   └── Region.java                  # Modelo de dados da região
+│   │   │   │   └── Region.java                  # Modelo de dados das regiões
 │   │   │   ├── repository/
-│   │   │   │   └── RegionRepository.java        # Repositório JPA
+│   │   │   │   └── RegionRepository.java        # Repositório de acesso a dados
 │   │   │   └── service/
-│   │   │       ├── CommandService.java          # Executa comandos no sistema
-│   │   │       └── RegionService.java           # Lógica de negócio
+│   │   │       ├── CommandService.java          # Lógica para execução de comandos
+│   │   │       └── RegionService.java           # Lógica de negócios de regiões
 │   │   ├── resources/
 │   │   │   ├── templates/
-│   │   │   │   └── index.html                   # Interface web (Thymeleaf)
+│   │   │   │   └── index.html                   # Página principal da interface web
 │   │   │   ├── static/css/
-│   │   │   │   └── styles.css                   # Estilização da interface
+│   │   │   │   └── styles.css                   # Arquivo de estilização
 │   │   │   ├── static/js/
 │   │   │   │   └── app.js                       # Lógica do frontend
 │   │   │   └── application.properties           # Configuração do Spring Boot
@@ -57,22 +64,27 @@ vpn-control/
 └── mvnw, mvnw.cmd                                # Wrapper Maven
 ```
 
+### **Estrutura do Script de Automação**
+
+O script **`setup_vpn.py`** executa tarefas como instalação de dependências, configuração do OpenVPN, criação de certificados e execução do backend Spring Boot.
+
 ---
 
 ## **4. Configuração do Ambiente**
 
-### **4.1 Pré-Requisitos**
+### **4.1 Pré-requisitos**
 
-- **Linux**: Recomendado (Ubuntu 20.04 ou superior).
-- **Java 17**: Instalar OpenJDK 17.
-- **Maven**: Instalar Maven (ou usar o Maven Wrapper fornecido).
-- **OpenVPN** e **Easy-RSA**: Configurados no servidor.
+- **Sistema Operacional**: Linux (Ubuntu 20.04 ou superior).
+- **Java 17**: OpenJDK 17 instalado.
+- **Maven**: Instalado ou usando o Maven Wrapper (`mvnw`).
+- **OpenVPN** e **Easy-RSA**: Instalados no servidor.
+- **Python 3**: Para executar o script de automação.
 
 ### **4.2 Configuração do Banco de Dados**
 
-No arquivo **`application.properties`**, você pode configurar o banco:
+O banco de dados pode ser configurado no arquivo **`application.properties`**:
 
-#### **H2 (Em memória para testes)**:
+#### **H2 (Banco em memória - Testes)**:
 ```properties
 spring.datasource.url=jdbc:h2:mem:vpnmanager
 spring.datasource.driver-class-name=org.h2.Driver
@@ -96,30 +108,22 @@ spring.jpa.show-sql=true
 ## **5. Como Rodar o Projeto**
 
 ### **5.1 Clonando o Repositório**
-
 ```bash
-git clone https://github.com/seu-usuario/vpn-control.git
+git clone https://github.com/devhadis/vpn-control.git
 cd vpn-control
 ```
 
 ### **5.2 Compilando o Projeto**
-
-Execute o Maven Wrapper para compilar o projeto:
-
 ```bash
 ./mvnw clean install
 ```
 
-### **5.3 Rodando o Projeto**
-
-Inicie o servidor Spring Boot:
-
+### **5.3 Iniciando o Servidor**
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Acesse a aplicação no navegador em:
-
+Acesse o sistema em:
 ```
 http://localhost:8080
 ```
@@ -130,25 +134,22 @@ http://localhost:8080
 
 ### **6.1 Interface Web**
 
-1. Acesse a página principal:  
-   ```plaintext
-   http://localhost:8080
-   ```
+1. Acesse:  
+   **http://localhost:8080**
 
-2. Escolha uma **região** no dropdown da interface.
+2. Escolha a região no dropdown.
 
-3. Clique no botão **"Connect VPN"** para iniciar a VPN.
+3. Clique em **"Connect VPN"** para iniciar a VPN.
 
-4. Para encerrar a VPN, clique em **"Stop VPN"**.
+4. Para encerrar, clique em **"Stop VPN"**.
 
-5. A saída do comando aparecerá na tela.
+5. A saída dos comandos será exibida na interface.
 
 ---
 
 ### **6.2 API REST**
 
 #### **1. Listar Regiões Disponíveis**
-
 - **Método**: `GET`
 - **URL**: `/regions`
 
@@ -161,7 +162,6 @@ http://localhost:8080
 ```
 
 #### **2. Iniciar VPN**
-
 - **Método**: `POST`
 - **URL**: `/vpn/start/{regionId}`
 
@@ -170,13 +170,7 @@ http://localhost:8080
 curl -X POST http://localhost:8080/vpn/start/1
 ```
 
-**Resposta**:
-```plaintext
-Comando executado com sucesso.
-```
-
 #### **3. Parar VPN**
-
 - **Método**: `POST`
 - **URL**: `/vpn/stop`
 
@@ -185,333 +179,75 @@ Comando executado com sucesso.
 curl -X POST http://localhost:8080/vpn/stop
 ```
 
-**Resposta**:
-```plaintext
-VPN stopped successfully.
+---
+
+## **7. Automação de Configuração**
+
+O código abaixo realiza a configuração completa do servidor VPN, geração de certificados e inicialização do backend.
+
+### **Código do Script `setup_vpn.py`**
+
+```python
+import os
+import subprocess
+import requests
+
+# Funções e configuração
+def run_command(command, capture_output=False):
+    try:
+        if capture_output:
+            result = subprocess.run(command, shell=True, check=True, text=True, stdout=subprocess.PIPE)
+            return result.stdout.strip()
+        else:
+            subprocess.run(command, shell=True, check=True)
+    except subprocess.CalledProcessError as e:
+        print(f"Erro ao executar comando: {command}\n{e}")
+        exit(1)
+
+def get_server_ip():
+    try:
+        response = requests.get("https://api.ipify.org")
+        response.raise_for_status()
+        return response.text
+    except requests.RequestException as e:
+        print(f"Erro ao obter o IP público do servidor: {e}")
+        exit(1)
+
+OPENVPN_DIR = "/etc/openvpn"
+EASYRSA_DIR = os.path.expanduser("~/openvpn-ca")
+SPRING_PROJECT_DIR = os.path.expanduser("~/vpn-spring-project")
+GITHUB_REPO_URL = "https://github.com/devhadis/vpn-spring-project.git"
+CLIENT_NAME = "client1"
+
+# Configuração do OpenVPN e Spring Boot
+print("Atualizando sistema e instalando dependências...")
+run_command("sudo apt update && sudo apt install -y openvpn easy-rsa ufw openjdk-17-jdk git")
+print("Gerando certificados e configurando OpenVPN...")
+run_command(f"mkdir -p {EASYRSA_DIR}")
+run_command(f"cp -r /usr/share/easy-rsa/* {EASYRSA_DIR}")
+os.chdir(EASYRSA_DIR)
+run_command("./easyrsa init-pki")
+run_command("./easyrsa build-ca nopass")
+run_command("./easyrsa gen-req server nopass")
+run_command("./easyrsa sign-req server server")
+run_command("./easyrsa gen-dh")
+server_ip = get_server_ip()
+print(f"Servidor configurado com IP público: {server_ip}")
+
+# Rodando o Spring Boot
+print("Baixando e executando o projeto Spring Boot...")
+if not os.path.exists(SPRING_PROJECT_DIR):
+    run_command(f"git clone {GITHUB_REPO_URL} {SPRING_PROJECT_DIR}")
+os.chdir(SPRING_PROJECT_DIR)
+run_command("./mvnw spring-boot:run")
 ```
 
 ---
 
-## **7. Segurança**
+## **8. Conclusão**
 
-O projeto usa **Spring Security** para proteger endpoints sensíveis. A autenticação básica é configurada com o usuário:
+Este projeto integra **Spring Boot** e **OpenVPN** com automação para facilitar a configuração e gestão de VPN. Ele é ideal para administradores e desenvolvedores que desejam uma solução rápida e eficiente.
 
-- **Usuário**: `admin`
-- **Senha**: `password123`
-
-Você pode ajustar essas configurações no **`SecurityConfig.java`**.
-
----
-
-## **8. Funcionamento com OpenVPN**
-
-O backend Spring Boot chama comandos do sistema usando o **`CommandService`** para:
-
-1. **Iniciar a VPN**:  
-   Exemplo:  
-   ```bash
-   sudo systemctl start openvpn@br
-   ```
-
-2. **Parar a VPN**:  
-   Exemplo:  
-   ```bash
-   sudo systemctl stop openvpn@server
-   ```
-
-3. Esses comandos são **pré-validados** no servidor e protegidos contra injeção.
-
----
-
-## **9. Teste da Conexão VPN**
-
-1. **Cliente OpenVPN**:  
-   Transfira o arquivo `.ovpn` gerado para o cliente:
-
-   ```bash
-   scp ~/openvpn-ca/clients/client1.ovpn user@client-machine:/path/
-   ```
-
-2. **No Cliente**:
-   ```bash
-   sudo openvpn --config client1.ovpn
-   ```
-
-3. **Verifique o IP Público**:
-   ```bash
-   curl https://api.ipify.org
-   ```
-
-Se o IP público mudar para o do servidor VPN, a configuração está correta.
-
----
-
-## **10. Conclusão**
-
-Este projeto automatiza a criação e o gerenciamento de conexões VPN utilizando **OpenVPN** e fornece uma interface gerenciada por **Spring Boot**. A interface permite ao usuário final gerenciar facilmente servidores VPN em várias regiões.
-
-Se você tiver alguma dúvida ou problema, contribua com o projeto no GitHub!
-
----
-
-**Autor**: Seu Nome  
-**GitHub**: [Seu Repositório](#)  
-**Data de Criação**: Julho de 2024 🚀# **Documentação do Projeto VPN com Spring Boot**
-
-## **1. Visão Geral**
-
-O projeto **VPN Control Panel** é uma aplicação Spring Boot que permite **gerenciar servidores VPN** com facilidade. Através de uma interface web simples e endpoints de API REST, o projeto permite:
-
-- Escolher regiões para iniciar ou parar a VPN.
-- Gerenciar configurações de VPN usando OpenVPN.
-- Facilitar a execução de comandos pré-definidos no servidor.
-
----
-
-## **2. Tecnologias Utilizadas**
-
-- **Spring Boot**: Framework principal para criação de APIs e gerenciamento.
-- **Spring Web**: Para construção de endpoints REST.
-- **Spring Security**: Para proteger rotas sensíveis com autenticação.
-- **Spring Data JPA**: Para acesso ao banco de dados (H2 ou MySQL).
-- **Thymeleaf**: Para renderização de páginas HTML.
-- **OpenVPN**: Ferramenta para criação e gerenciamento de VPN.
-- **Easy-RSA**: Gerenciamento de certificados e chaves.
-- **Java 17**: Versão do JDK.
-- **Maven**: Gerenciador de dependências.
-- **Linux**: Sistema operacional base para execução do servidor OpenVPN.
-
----
-
-## **3. Estrutura do Projeto**
-
-```plaintext
-vpn-control/
-├── src/
-│   ├── main/
-│   │   ├── java/com/vpnmanager/
-│   │   │   ├── VpnControlApplication.java       # Classe principal
-│   │   │   ├── config/
-│   │   │   │   └── SecurityConfig.java          # Configurações de segurança
-│   │   │   ├── controller/
-│   │   │   │   ├── RegionController.java        # Gerencia rotas das regiões
-│   │   │   │   └── VpnController.java           # Gerencia as VPNs
-│   │   │   ├── model/
-│   │   │   │   └── Region.java                  # Modelo de dados da região
-│   │   │   ├── repository/
-│   │   │   │   └── RegionRepository.java        # Repositório JPA
-│   │   │   └── service/
-│   │   │       ├── CommandService.java          # Executa comandos no sistema
-│   │   │       └── RegionService.java           # Lógica de negócio
-│   │   ├── resources/
-│   │   │   ├── templates/
-│   │   │   │   └── index.html                   # Interface web (Thymeleaf)
-│   │   │   ├── static/css/
-│   │   │   │   └── styles.css                   # Estilização da interface
-│   │   │   ├── static/js/
-│   │   │   │   └── app.js                       # Lógica do frontend
-│   │   │   └── application.properties           # Configuração do Spring Boot
-├── pom.xml                                       # Dependências do Maven
-└── mvnw, mvnw.cmd                                # Wrapper Maven
-```
-
----
-
-## **4. Configuração do Ambiente**
-
-### **4.1 Pré-Requisitos**
-
-- **Linux**: Recomendado (Ubuntu 20.04 ou superior).
-- **Java 17**: Instalar OpenJDK 17.
-- **Maven**: Instalar Maven (ou usar o Maven Wrapper fornecido).
-- **OpenVPN** e **Easy-RSA**: Configurados no servidor.
-
-### **4.2 Configuração do Banco de Dados**
-
-No arquivo **`application.properties`**, você pode configurar o banco:
-
-#### **H2 (Em memória para testes)**:
-```properties
-spring.datasource.url=jdbc:h2:mem:vpnmanager
-spring.datasource.driver-class-name=org.h2.Driver
-spring.datasource.username=sa
-spring.datasource.password=
-spring.jpa.hibernate.ddl-auto=update
-spring.h2.console.enabled=true
-```
-
-#### **MySQL (Produção)**:
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/vpn_manager
-spring.datasource.username=root
-spring.datasource.password=senha
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-```
-
----
-
-## **5. Como Rodar o Projeto**
-
-### **5.1 Clonando o Repositório**
-
-```bash
-git clone https://github.com/seu-usuario/vpn-control.git
-cd vpn-control
-```
-
-### **5.2 Compilando o Projeto**
-
-Execute o Maven Wrapper para compilar o projeto:
-
-```bash
-./mvnw clean install
-```
-
-### **5.3 Rodando o Projeto**
-
-Inicie o servidor Spring Boot:
-
-```bash
-./mvnw spring-boot:run
-```
-
-Acesse a aplicação no navegador em:
-
-```
-http://localhost:8080
-```
-
----
-
-## **6. Uso da Aplicação**
-
-### **6.1 Interface Web**
-
-1. Acesse a página principal:  
-   ```plaintext
-   http://localhost:8080
-   ```
-
-2. Escolha uma **região** no dropdown da interface.
-
-3. Clique no botão **"Connect VPN"** para iniciar a VPN.
-
-4. Para encerrar a VPN, clique em **"Stop VPN"**.
-
-5. A saída do comando aparecerá na tela.
-
----
-
-### **6.2 API REST**
-
-#### **1. Listar Regiões Disponíveis**
-
-- **Método**: `GET`
-- **URL**: `/regions`
-
-**Exemplo de Resposta**:
-```json
-[
-  { "id": 1, "name": "Brasil - São Paulo", "command": "openvpn@br" },
-  { "id": 2, "name": "EUA - Nova York", "command": "openvpn@us-east" }
-]
-```
-
-#### **2. Iniciar VPN**
-
-- **Método**: `POST`
-- **URL**: `/vpn/start/{regionId}`
-
-**Exemplo**:
-```bash
-curl -X POST http://localhost:8080/vpn/start/1
-```
-
-**Resposta**:
-```plaintext
-Comando executado com sucesso.
-```
-
-#### **3. Parar VPN**
-
-- **Método**: `POST`
-- **URL**: `/vpn/stop`
-
-**Exemplo**:
-```bash
-curl -X POST http://localhost:8080/vpn/stop
-```
-
-**Resposta**:
-```plaintext
-VPN stopped successfully.
-```
-
----
-
-## **7. Segurança**
-
-O projeto usa **Spring Security** para proteger endpoints sensíveis. A autenticação básica é configurada com o usuário:
-
-- **Usuário**: `admin`
-- **Senha**: `password123`
-
-Você pode ajustar essas configurações no **`SecurityConfig.java`**.
-
----
-
-## **8. Funcionamento com OpenVPN**
-
-O backend Spring Boot chama comandos do sistema usando o **`CommandService`** para:
-
-1. **Iniciar a VPN**:  
-   Exemplo:  
-   ```bash
-   sudo systemctl start openvpn@br
-   ```
-
-2. **Parar a VPN**:  
-   Exemplo:  
-   ```bash
-   sudo systemctl stop openvpn@server
-   ```
-
-3. Esses comandos são **pré-validados** no servidor e protegidos contra injeção.
-
----
-
-## **9. Teste da Conexão VPN**
-
-1. **Cliente OpenVPN**:  
-   Transfira o arquivo `.ovpn` gerado para o cliente:
-
-   ```bash
-   scp ~/openvpn-ca/clients/client1.ovpn user@client-machine:/path/
-   ```
-
-2. **No Cliente**:
-   ```bash
-   sudo openvpn --config client1.ovpn
-   ```
-
-3. **Verifique o IP Público**:
-   ```bash
-   curl https://api.ipify.org
-   ```
-
-Se o IP público mudar para o do servidor VPN, a configuração está correta.
-
----
-
-## **10. Conclusão**
-
-Este projeto automatiza a criação e o gerenciamento de conexões VPN utilizando **OpenVPN** e fornece uma interface gerenciada por **Spring Boot**. A interface permite ao usuário final gerenciar facilmente servidores VPN em várias regiões.
-
-Se você tiver alguma dúvida ou problema, contribua com o projeto no GitHub!
-
----
-
-**Autor**: Hadis  
-**GitHub**: [https://github.com/devhadis](#)  
-**Data de Criação**: Julho de 2024 🚀
+- **Autor**: Hadis  
+- **GitHub**: [https://github.com/devhadis](https://github.com/devhadis)  
+- **Data de Criação**: Julho de 2024 🚀
